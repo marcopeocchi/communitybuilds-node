@@ -1,0 +1,38 @@
+{
+  "name": "communitybuilds-node",
+  "version": "1.0.0",
+  "description": "Node.js API for Genshin Impact communitiy builds spreadsheet",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jestconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "author": "marcopeocchi",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.7.16",
+    "dotenv": "^16.0.2",
+    "jest": "^28.0.8",
+    "ts-jest": "^28.0.8",
+    "typescript": "^4.8.3"
+  },
+  "keywords": [
+    "Genshin",
+    "Impact",
+    "API",
+    "genshin-impact"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcopeocchi/communitybuilds-node.git"
+  },
+  "dependencies": {
+    "lru-cache": "^7.14.0"
+  }
+}
