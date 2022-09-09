@@ -89,7 +89,7 @@ In order to properly function this package needs a google-console api key that y
 
 ```javascript
 CommunityBuilds.init()     // init API
-CommunityBuilds.pyro()     // init API
+CommunityBuilds.pyro()     // fetch pyro builds
 CommunityBuilds.hydro()    // fetch hydro builds
 CommunityBuilds.anemo()    // fetch anemo builds
 CommunityBuilds.electro()  // fetch electro builds
