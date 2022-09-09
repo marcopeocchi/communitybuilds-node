@@ -7,12 +7,12 @@ Straightforward NodeJS wrapper / API to perform data fetching from [Genshin Impa
 ## Usage
 
 ```shell
-npm i community-builds-node
+npm i communitybuilds-node
 ```
 
 ```javascript
 const { inspect } = require("util")
-const { CommunityBuilds } = require("community-builds-node")
+const { CommunityBuilds } = require("communitybuilds-node")
 
 // you must init the package with a google-console apikey
 CommunityBuilds.init("your-api-key")
