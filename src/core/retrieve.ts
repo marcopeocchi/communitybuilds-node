@@ -49,9 +49,9 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
             port: 443,
         };
         let chunks: any[] = [];
-        https.get(options, (res: any) => {
+        https.get(options, (res) => {
             // push the http packets chunks into the buffer
-            res.on('data', (chunk: any) => {
+            res.on('data', (chunk) => {
                 chunks.push(chunk);
             });
             // the connection has ended so build the body from the buffer
@@ -68,7 +68,12 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                 catch (err) {
                     reject(err);
                 }
+            })
+            res.on('error', (e) => {
+                console.log(e)
             });
+        }).on('error', (error) => {
+            reject(error);
         });
     });
     // chain the first promise with the parsing one.
