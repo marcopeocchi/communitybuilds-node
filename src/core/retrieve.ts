@@ -10,7 +10,7 @@ const path = '/v4/spreadsheets/1gNxZ2xab1J6o1TuNVWMeLOZ7TPOqrsf3SshP5DLvKzI/valu
 
 const cache = new LRUCache<GenshinElement, APIResponse>({
     max: 50,
-    ttl: 1000 * 30,
+    ttl: 1000 * 60,
     allowStale: false,
     updateAgeOnGet: false,
     updateAgeOnHas: false,
@@ -25,6 +25,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
     if (!key) throw Error("Must set Google API key")
 
     if (cache.get(element)) {
+        console.log("cache hit!")
         return new Promise<APIResponse>((resolve) => resolve(cache.get(element)!))
     }
 
@@ -157,11 +158,11 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
 
             // if there is output try to resolve the promise, alternatively reject it
             if (response.length > 0) {
-                resolve({ data: response });
                 cache.set(element, { data: response })
+                resolve({ data: response });
             } else {
-                reject(response);
                 cache.clear()
+                reject(response);
             }
         });
     });
