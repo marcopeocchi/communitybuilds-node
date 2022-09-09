@@ -25,7 +25,6 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
     if (!key) throw Error("Must set Google API key")
 
     if (cache.get(element)) {
-        console.log("cache hit!")
         return new Promise<APIResponse>((resolve) => resolve(cache.get(element)!))
     }
 
