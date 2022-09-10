@@ -112,5 +112,8 @@ CommunityBuilds.bows()
 CommunityBuilds.artifacts() 
 ```
 
+## Notes
+Fetching artifacts and weapons does NOT require a google API key, only fetching builds requires it.
+
 ## Credits
 Credits to the [original owners and contributors](https://docs.google.com/spreadsheets/d/1gNxZ2xab1J6o1TuNVWMeLOZ7TPOqrsf3SshP5DLvKzI/htmlview?pru=AAABdXYM80o*xMxXJdNbCCZ-v9FLVh6EXg#).
