@@ -115,5 +115,28 @@ CommunityBuilds.artifacts()
 ## Notes
 Fetching artifacts and weapons does NOT require a google API key, only fetching builds requires it.
 
+## Technical notes
+As mentioned before an LRU cache is implemented. This means that the first fetch is in the order of 300-400ms (depending on your hardware), subsequents fetches stands in the order of 0.01-1ms (depending on your hardware).  
+This is extremely useful if you planning to do recurring fetches or updating DBs.  
+The cache's TTL is 1 minute for both characters build and artifacts/weapons, though it might be increased in the future (after analyzing data of everyday uses).
+
+```javascript
+// test taken on M1 mac mini
+
+console.time()
+await CommunityBuilds.artifacts()
+console.timeEnd()
+
+// default: 2.103s
+
+// subsequent call ->
+console.time()
+await CommunityBuilds.artifacts()
+console.timeEnd()
+
+// default: 0.01ms
+```
+
+
 ## Credits
 Credits to the [original owners and contributors](https://docs.google.com/spreadsheets/d/1gNxZ2xab1J6o1TuNVWMeLOZ7TPOqrsf3SshP5DLvKzI/htmlview?pru=AAABdXYM80o*xMxXJdNbCCZ-v9FLVh6EXg#).
