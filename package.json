@@ -33,6 +33,7 @@
     "url": "git+https://github.com/marcopeocchi/communitybuilds-node.git"
   },
   "dependencies": {
+    "cheerio": "1.0.0-rc.12",
     "lru-cache": "^7.14.0"
   }
 }

@@ -1,13 +1,13 @@
 import { APIResponse, GenshinCharacter, GenshinCharacterBuild, GenshinElement } from '../types/global';
 import { httpHeaders, googleSheetsApidomain, spreadsheetPath } from './constants'
 
-import myHttp from './utils';
+import myHttp from './http';
 import LRUCache from 'lru-cache';
 
 let key: string;
 let params: string;
 
-const cache = new LRUCache<GenshinElement, APIResponse>({
+const cache = new LRUCache<GenshinElement, APIResponse<GenshinCharacter>>({
     max: 10,
     ttl: 1000 * 60,
     allowStale: false,
@@ -20,11 +20,11 @@ export const setApiKey = (apiKey: string) => {
     params = `alt=json&key=${key}`
 }
 
-export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse> => {
+export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse<GenshinCharacter>> => {
     if (!key) throw Error("Must set Google API key")
 
     if (cache.peek(element)) {
-        return new Promise<APIResponse>(resolve => resolve(cache.get(element)!))
+        return new Promise<APIResponse<GenshinCharacter>>(resolve => resolve(cache.get(element)!))
     }
 
     const mapping: Record<GenshinElement, string> = {
@@ -42,7 +42,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
         headers: httpHeaders
     })
     // chain the first promise with the parsing one.
-    return new Promise<APIResponse>((resolve, reject) => {
+    return new Promise<APIResponse<GenshinCharacter>>((resolve, reject) => {
         rawJSON.then((res: any) => {
             // the response will be an array of characters' builds
             const response: GenshinCharacter[] = [];

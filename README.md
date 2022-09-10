@@ -29,6 +29,11 @@ async function cryoBuilds(){
     const { data } = await CommunityBuilds.cryo()
     console.log(data)
 }
+
+async function artifacts(){
+    const { data } = await CommunityBuilds.artifacts()
+    console.log(data)
+}
 ```
 
 First example will output
@@ -88,15 +93,23 @@ In order to properly function this package needs a google-console api key that y
 ## Available methods
 
 ```javascript
-CommunityBuilds.init()     // init API
-CommunityBuilds.pyro()     // fetch pyro builds
-CommunityBuilds.hydro()    // fetch hydro builds
-CommunityBuilds.anemo()    // fetch anemo builds
-CommunityBuilds.electro()  // fetch electro builds
-CommunityBuilds.dendro()   // fetch dendro build
-CommunityBuilds.cryo()     // fetch cryo builds
-CommunityBuilds.geo()      // fetch geo builds
-CommunityBuilds.all()      // return iterable of all elements
+CommunityBuilds.init()      // init API
+CommunityBuilds.pyro()      // fetch pyro builds
+CommunityBuilds.hydro()     // fetch hydro builds
+CommunityBuilds.anemo()     // fetch anemo builds
+CommunityBuilds.electro()   // fetch electro builds
+CommunityBuilds.dendro()    // fetch dendro build
+CommunityBuilds.cryo()      // fetch cryo builds
+CommunityBuilds.geo()       // fetch geo builds
+CommunityBuilds.all()       // return iterable of all elements
+
+CommunityBuilds.claymores()
+CommunityBuilds.swords()
+CommunityBuilds.catalysts()
+CommunityBuilds.polearms()
+CommunityBuilds.bows()
+
+CommunityBuilds.artifacts() 
 ```
 
 ## Credits
