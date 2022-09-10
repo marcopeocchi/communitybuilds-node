@@ -33,11 +33,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
+          registry-url: https://registry.npmjs.org
+      - run: yarn ci
         env:
           API_KEY: ${{secrets.GOOGLE_API_KEY}}
-      - run: npm publish
+      - run: yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           API_KEY: ${{secrets.GOOGLE_API_KEY}}
