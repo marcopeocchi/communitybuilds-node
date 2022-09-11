@@ -15,11 +15,20 @@ const cache = new LRUCache<GenshinElement, APIResponse<GenshinCharacter>>({
     updateAgeOnHas: false,
 })
 
+/**
+ * Make api key available at module level
+ * @param apiKey Google console api key
+ */
 export const setApiKey = (apiKey: string) => {
     key = apiKey;
     params = `alt=json&key=${key}`
 }
 
+/**
+ * Retrieve all characters build by element by parsing Google Spreadsheets JSON values.
+ * @param element Genshin Impact element
+ * @returns Standard api response
+ */
 export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse<GenshinCharacter>> => {
     if (!key) throw Error("Must set Google API key")
 
@@ -88,7 +97,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                     const equipment: string = builds[i][3];
                     const artifacts: string = builds[i][4];
                     // const notes = builds[i][5];
-                    // prettify the output
+                    // format the output
                     if (role && equipment && artifacts) {
                         buildsBuff.push({
                             role: role
@@ -100,13 +109,13 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                                 .replace(/(\d{1,2}\.)/gm, "")
                                 .replace(/\([4-5]✩\)/gm, "")
                                 .split("\n")
-                                .filter((e: any) => e)
+                                .filter(Boolean)
                                 .map((a: any) => a.trim()),
                             artifacts: artifacts
                                 .replace(/(\d{1,2}\.)/gm, "")
                                 .replace(/\([4-5]✩\)/gm, "")
                                 .split('\n')
-                                .filter((a: any) => a)
+                                .filter(Boolean)
                                 .map((a: any) => a.trim()),
                             optimal: role.includes("✩")
                         });

@@ -1,5 +1,5 @@
 import { getBuildsByElement, setApiKey } from "./core/retrieve";
-import { findArtifacts, findWeapons } from "./core/retrieveScraping";
+import { findArtifacts, findWeapons } from "./core/retrieveByScraping";
 import { APIResponse, Artifact, GenshinCharacter, GenshinElement, Weapon } from "./types/global";
 
 export namespace CommunityBuilds {
