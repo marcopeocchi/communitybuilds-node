@@ -58,8 +58,6 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
             /* represent the offset between a build to another. This because the json
                response is highly inconsistent */
             const offsets: number[] = [];
-            // the effective lenght of each section delimited between two offsets
-            let length = 0;
             // Skip the first 4 line as they're table headers
             for (let i = 4; i < res.length; i++) {
                 /* get the lenght of the sub stats array as it will vary from
@@ -112,7 +110,9 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                         circlet: _artifactsMainStats ? _artifactsMainStats.at(2)?.at(1) : '',
                     }
                     // format the output
-                    if (role && equipment && artifacts) {
+                    if (!(name && role && equipment && artifacts)) continue
+
+                    if (name && role && equipment && artifacts) {
                         buildsBuff.push({
                             role: role
                                 .replace("✩", "")
