@@ -120,7 +120,10 @@ Fetching artifacts and weapons does NOT require a google API key, only fetching 
 ## Technical notes
 As mentioned before an LRU cache is implemented. This means that the first fetch is in the order of 300-400ms (depending on your hardware), subsequents fetches stands in the order of 0.01-1ms (depending on your hardware).  
 This is extremely useful if you planning to do recurring fetches or updating DBs.  
-The cache's TTL is 1 minute for both characters build and artifacts/weapons, though it might be increased in the future (after analyzing data of everyday uses).
+The cache's TTL is 1 minute for both characters build and artifacts/weapons, though it might be increased in the future (after analyzing data of everyday uses).  
+Apparently Google Docs bumps classnames by 1 upon every build. Let me explain: classname "s79" becomes "s80. This is an absolute mess,
+especially for the scraping method.  
+Any help is appriciated.
 
 ```javascript
 // test taken on M1 mac mini
