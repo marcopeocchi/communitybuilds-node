@@ -11,6 +11,8 @@
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
+    "sourceMap": true,
+    "allowJs": false
   },
   "include": [
     "src/**/*"

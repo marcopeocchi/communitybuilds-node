@@ -1,9 +1,8 @@
 import * as cheerio from 'cheerio';
 import { googleDocsArtifacts, googleDocsArtifactsPath, httpHeaders } from '../core/constants';
 import myHttp from '../core/http';
-import { Weapon } from '../types/global';
-import { findWeapons } from '../core/retrieveByScraping'
-import { CommunityBuilds } from '../index'
+import { findWeapons } from '../core/retrieveByScraping';
+import { CommunityBuilds } from '../index';
 
 describe("scrape google docs page", () => {
     it("returns valid html", async () => {

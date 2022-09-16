@@ -2,6 +2,13 @@ export type GenshinCharacterBuild = {
     role: string,
     equipment: string[]
     artifacts: string[]
+    artifactsMainStats?: {
+        sands: string | undefined,
+        goblet: string | undefined,
+        circlet: string | undefined,
+    }
+    artifactsSubStats: string[]
+    talentPriority: string[]
     optimal: boolean
     notes?: string
 }

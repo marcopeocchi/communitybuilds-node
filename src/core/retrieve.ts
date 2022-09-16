@@ -66,7 +66,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                    character to character */
                 if (res[i].length === 7) {
                     if (res[i][6] === 'SUBSTATS') {
-                        length++;
+                        offsets.push(i);
                     }
                 }
                 // calculate the offset between sections
@@ -80,23 +80,37 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                generated between sections */
             for (let i = 0; i < offsets.length; i++) {
                 // calculate how many builds there are in a section
-                let nBuilds = (offsets[i + 1] - offsets[i]) - 3
+                let nBuilds = (offsets[i + 1] - offsets[i]) + 1
                 /* we reached the end of the main array, so the last offset is
                    is calculated from the end of the main array */
                 if (Number.isNaN(nBuilds)) {
-                    nBuilds = (res.length - offsets[i]) - 3;
+                    nBuilds = (res.length - offsets[i]);
                 }
                 // generate the sub-array / silce
-                const builds = res.slice(offsets[i] + 2, offsets[i] + 2 + nBuilds);
-                // const notes = res.slice(-1).filter((n: any) => n).filter((n: any) => n != '');
+                const builds = res.slice(offsets[i] + 2, offsets[i] + nBuilds + 3);
+                //const [notes] = res.slice(offsets[i] + 4, offsets[i] + nBuilds + 3);
                 // buffer for the intermediate output
                 const buildsBuff: GenshinCharacterBuild[] = [];
+                // charachter name
+                const name = String(res[offsets[i]][1]).toLowerCase().trim();
                 // generate the build by role
                 for (let i = 0; i < builds.length; i++) {
                     const role: string = builds[i][2];
                     const equipment: string = builds[i][3];
                     const artifacts: string = builds[i][4];
-                    // const notes = builds[i][5];
+                    const artifactsMainStats: string = builds[i][5];
+                    const artifactsSubStats: string = builds[i][6];
+                    const talentPriority: string = builds[i][7];
+
+                    let _artifactsMainStats = (artifactsMainStats ?? "")
+                        .split("\n")
+                        .map(x => x.split(' - '));
+
+                    const _artifactsMainsStatsObj = {
+                        sands: _artifactsMainStats ? _artifactsMainStats.at(0)?.at(1) : '',
+                        goblet: _artifactsMainStats ? _artifactsMainStats.at(1)?.at(1) : '',
+                        circlet: _artifactsMainStats ? _artifactsMainStats.at(2)?.at(1) : '',
+                    }
                     // format the output
                     if (role && equipment && artifacts) {
                         buildsBuff.push({
@@ -117,13 +131,27 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                                 .split('\n')
                                 .filter(Boolean)
                                 .map((a: any) => a.trim()),
-                            optimal: role.includes("✩")
+                            artifactsSubStats: artifactsSubStats
+                                .replace(/(\d{1,2}\.)/gm, "")
+                                .replace(/\([4-5]✩\)/gm, "")
+                                .split('\n')
+                                .filter(Boolean)
+                                .map((a: any) => a.trim()),
+                            artifactsMainStats: _artifactsMainsStatsObj,
+                            talentPriority: talentPriority
+                                .replace(/(\d{1,2}\.)/gm, "")
+                                .replace(/\([4-5]✩\)/gm, "")
+                                .split('\n')
+                                .filter(Boolean)
+                                .map((a: any) => a.trim()),
+                            optimal: role.includes("✩"),
+                            //notes: notes,
                         });
                     }
                 }
                 // each object is composed by name and the array of the relative builds
                 response.push({
-                    name: String(res[offsets[i]][1]).toLowerCase().trim(),
+                    name: name,
                     builds: buildsBuff,
                 });
             }
