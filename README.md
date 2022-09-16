@@ -2,6 +2,8 @@
 
 ![logo](https://i.ibb.co/Q9M7kjd/logo.png)
 
+[![NPM](https://nodei.co/npm/communitybuilds-node.png)](https://npmjs.org/package/communitybuilds-node)
+
 Straightforward NodeJS wrapper / API to perform data fetching from [Genshin Impact Helper Team's spreadsheet](https://docs.google.com/spreadsheets/d/1gNxZ2xab1J6o1TuNVWMeLOZ7TPOqrsf3SshP5DLvKzI).
 
 ## Usage
