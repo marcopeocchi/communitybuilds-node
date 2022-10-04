@@ -150,10 +150,12 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                     }
                 }
                 // each object is composed by name and the array of the relative builds
-                response.push({
-                    name: name,
-                    builds: buildsBuff,
-                });
+                if (name != "") {
+                    response.push({
+                        name: name,
+                        builds: buildsBuff,
+                    });
+                }
             }
 
             // if there is output try to resolve the promise, alternatively reject it

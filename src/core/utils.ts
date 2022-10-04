@@ -23,12 +23,11 @@ export function bumpClassBy<T>(strategy: SearchStrategy<T>, bumpAddend: number):
     for (const key in strategy) {
         if (Object.prototype.hasOwnProperty.call(strategy, key)) {
             if (key !== 'img') {
-                const bumped = strategy[key]
+                copy[key] = strategy[key]
                     .replace('td.s', '')
                     .split(',')
                     .map(val => String(Number(val) + bumpAddend))
-                    .reduce((curr, next) => `${curr}, td.s${next}`)
-                copy[key] = `td.s${bumped}`
+                    .reduce((curr, next) => `${curr}, td.s${next}`, 'td.s')
             }
         }
     }

@@ -148,7 +148,7 @@ Will output
 
 ## API keys
 
-In order to properly function this package needs a google-console api key that you can obtain freely from [here](https://console.cloud.google.com/apis/credentials). Create a new project then request a new API key. Beware of the 300 req/min limit. An LRU cache has been added to avoir reaching prematurely the limit.
+In order to properly function this package needs a google-console api key that you can obtain freely from [here](https://console.cloud.google.com/apis/credentials) and then enable the Google Sheet API. Create a new project then request a new API key. Beware of the 300 req/min limit. An LRU cache has been added to avoir reaching prematurely the limit.
 
 ## Available methods
 
