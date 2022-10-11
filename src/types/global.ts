@@ -54,5 +54,5 @@ export type SearchStrategyMapping = Record<GenshinWeapons, SearchStrategy<Weapon
 
 export type Config = {
     eludeCaching: boolean
-    cacheTTL?: number
+    cacheTTL: number
 }

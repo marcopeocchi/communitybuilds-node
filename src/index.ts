@@ -3,7 +3,7 @@ import { findArtifacts, findWeapons } from "./core/retrieveByScraping";
 import { APIResponse, Artifact, Config, GenshinCharacter, GenshinElement, Weapon } from "./types/global";
 
 export namespace CommunityBuilds {
-    export function init(key: string, config: Config = { eludeCaching: false }) {
+    export function init(key: string, config: Config = { eludeCaching: false, cacheTTL: 60 * 1000 }) {
         setApiKey(key)
         setConfig(config)
     }
