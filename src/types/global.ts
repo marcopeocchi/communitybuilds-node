@@ -51,3 +51,8 @@ export type Weapon = {
 
 export type SearchStrategy<T> = Record<keyof T, string>
 export type SearchStrategyMapping = Record<GenshinWeapons, SearchStrategy<Weapon>>
+
+export type Config = {
+    eludeCaching: boolean
+    cacheTTL?: number
+}

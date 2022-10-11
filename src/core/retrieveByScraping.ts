@@ -10,11 +10,11 @@ import {
 } from './strategies';
 import { bumpClassBy, Decouple } from './utils';
 
-const CLASS_BUMPS = 50
+const CLASS_BUMPS = 100
 
 const cache = new LRUCache<string, Weapon[] | Artifact[]>({
     max: 50,
-    ttl: 1000 * 60,
+    ttl: 1000 * 60 * 60,
     allowStale: false,
     updateAgeOnGet: false,
     updateAgeOnHas: false,

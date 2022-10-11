@@ -1,4 +1,4 @@
-import { APIResponse, GenshinCharacter, GenshinCharacterBuild, GenshinElement } from '../types/global';
+import { APIResponse, Config, GenshinCharacter, GenshinCharacterBuild, GenshinElement } from '../types/global';
 import { httpHeaders, googleSheetsApidomain, spreadsheetPath } from './constants'
 
 import myHttp from './http';
@@ -6,14 +6,9 @@ import LRUCache from 'lru-cache';
 
 let key: string;
 let params: string;
+let config: Config;
 
-const cache = new LRUCache<GenshinElement, APIResponse<GenshinCharacter>>({
-    max: 10,
-    ttl: 1000 * 60,
-    allowStale: false,
-    updateAgeOnGet: false,
-    updateAgeOnHas: false,
-})
+let cache: LRUCache<GenshinElement, APIResponse<GenshinCharacter>>;
 
 /**
  * Make api key available at module level
@@ -25,6 +20,23 @@ export const setApiKey = (apiKey: string) => {
 }
 
 /**
+ * Make configs available at module level
+ * @param aconfig Config object
+ */
+export const setConfig = (aconfig: Config) => {
+    config = aconfig;
+    if (!config.eludeCaching) {
+        cache = new LRUCache<GenshinElement, APIResponse<GenshinCharacter>>({
+            max: 10,
+            ttl: config.cacheTTL ?? 1000 * 60,
+            allowStale: false,
+            updateAgeOnGet: false,
+            updateAgeOnHas: false,
+        })
+    }
+}
+
+/**
  * Retrieve all characters build by element by parsing Google Spreadsheets JSON values.
  * @param element Genshin Impact element
  * @returns Standard api response
@@ -32,7 +44,7 @@ export const setApiKey = (apiKey: string) => {
 export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse<GenshinCharacter>> => {
     if (!key) throw Error("Must set Google API key")
 
-    if (cache.peek(element)) {
+    if (!config.eludeCaching && cache.peek(element)) {
         return new Promise<APIResponse<GenshinCharacter>>(resolve => resolve(cache.get(element)!))
     }
 
@@ -91,8 +103,11 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                 const buildsBuff: GenshinCharacterBuild[] = [];
                 // charachter name
                 const name = String(res[offsets[i]][1]).toLowerCase().trim();
+                const nextName = String(res[offsets[i + 1]]?.at(1)).toLowerCase().trim()
                 // generate the build by role
                 for (let i = 0; i < builds.length; i++) {
+                    if (builds[i + 1]?.at(2) == "ROLE" && nextName != name) break
+
                     const role: string = builds[i][2];
                     const equipment: string = builds[i][3];
                     const artifacts: string = builds[i][4];
@@ -111,6 +126,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                     }
                     // format the output
                     if (!(name && role && equipment && artifacts)) continue
+
 
                     if (name && role && equipment && artifacts) {
                         buildsBuff.push({
@@ -152,7 +168,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                 // each object is composed by name and the array of the relative builds
                 if (name != "") {
                     response.push({
-                        name: name,
+                        name: name.replace('\n', ' '),
                         builds: buildsBuff,
                     });
                 }
@@ -160,10 +176,14 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
 
             // if there is output try to resolve the promise, alternatively reject it
             if (response.length > 0) {
-                cache.set(element, { data: response })
+                if (!config.eludeCaching) {
+                    cache.set(element, { data: response })
+                }
                 resolve({ data: response });
             } else {
-                cache.clear()
+                if (!config.eludeCaching) {
+                    cache.clear()
+                }
                 reject(response);
             }
         });

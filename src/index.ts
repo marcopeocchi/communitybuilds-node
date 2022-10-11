@@ -1,10 +1,11 @@
-import { getBuildsByElement, setApiKey } from "./core/retrieve";
+import { getBuildsByElement, setApiKey, setConfig } from "./core/retrieve";
 import { findArtifacts, findWeapons } from "./core/retrieveByScraping";
-import { APIResponse, Artifact, GenshinCharacter, GenshinElement, Weapon } from "./types/global";
+import { APIResponse, Artifact, Config, GenshinCharacter, GenshinElement, Weapon } from "./types/global";
 
 export namespace CommunityBuilds {
-    export function init(key: string) {
+    export function init(key: string, config: Config = { eludeCaching: false }) {
         setApiKey(key)
+        setConfig(config)
     }
     export async function pyro(): Promise<APIResponse<GenshinCharacter>> {
         return getBuildsByElement("pyro")
