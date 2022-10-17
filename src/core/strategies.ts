@@ -8,9 +8,9 @@ export const artifactsMultipleSearchStrategy: SearchStrategy<Artifact> = {
 }
 
 export const weaponsMultipleSearchStrategy: SearchStrategy<Weapon> = {
-    name: 'td.s28, td.s32, td.s57, td.s40, td.s46, td.s58, td.s33, td.s44',
+    name: 'td.s29, td.s32, td.s57, td.s41, td.s46, td.s58, td.s33, td.s44',
     img: 'td>div>img',
-    mainStat: 'td.s41, td.s29',
-    subStat: 'td.s41, td.s29',
-    passiveEffect: 'td.s42, td.s30'
+    mainStat: 'td.s42, td.s30',
+    subStat: 'td.s42, td.s30',
+    passiveEffect: 'td.s43, td.s31'
 }

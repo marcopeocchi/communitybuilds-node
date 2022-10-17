@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build tsconfig.json",
     "test": "jest --config jestconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
-    "lru-cache": "^7.14.0"
+    "lru-cache": "^7.14.0",
+    "radash": "^7.1.0"
   }
 }

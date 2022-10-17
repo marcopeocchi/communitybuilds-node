@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/src/culo.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
+            "program": "${workspaceFolder}/src/main.ts",
+            "preLaunchTask": "npm: build",
             "outFiles": [
                 "${workspaceFolder}/lib/**/*.js"
             ]
