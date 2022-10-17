@@ -10,12 +10,12 @@ export type GenshinCharacterBuild = {
     artifactsSubStats: string[]
     talentPriority: string[]
     optimal: boolean
-    notes?: string
 }
 
 export type GenshinCharacter = {
     name: string
     builds: GenshinCharacterBuild[]
+    notes?: string
 }
 
 export type GenshinElement = 'pyro' | 'hydro' | 'anemo' | 'electro' | 'dendro' | 'cryo' | 'geo'

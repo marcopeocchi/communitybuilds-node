@@ -98,7 +98,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                 }
                 // generate the sub-array / silce
                 const builds: any[][] = res.slice(offsets[i] + 2, offsets[i] + nBuilds + 3);
-                //const [notes] = res.slice(offsets[i] + 4, offsets[i] + nBuilds + 3);
+                const notes: string = builds.at(-1)?.at(-1)
                 // buffer for the intermediate output
                 const buildsBuff: GenshinCharacterBuild[] = [];
                 // charachter name
@@ -114,7 +114,6 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                     const artifactsMainStats: string = builds[i][5];
                     const artifactsSubStats: string = builds[i][6];
                     const talentPriority: string = builds[i][7];
-                    const notes: string = builds.at(-1)?.at(-1)
 
                     let _artifactsMainStats = (artifactsMainStats ?? "")
                         .split("\n")
@@ -161,7 +160,6 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                                 .filter(Boolean)
                                 .map((a: any) => a.trim()),
                             optimal: role.includes("✩"),
-                            notes: notes,
                         });
                     }
                 }
@@ -170,6 +168,7 @@ export const getBuildsByElement = (element: GenshinElement): Promise<APIResponse
                     response.push({
                         name: name.replace('\n', ' '),
                         builds: buildsBuff,
+                        notes: notes,
                     });
                 }
             }
