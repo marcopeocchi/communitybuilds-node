@@ -30,11 +30,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcopeocchi/communitybuilds-node.git"
+    "url": "git+https://gitlab.com/btsstanner/communitybuilds-node.git"
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
-    "lru-cache": "^7.14.0",
-    "radash": "^7.1.0"
+    "lru-cache": "^7.14.0"
   }
 }
