@@ -1,16 +1,16 @@
 import { Artifact, SearchStrategy, Weapon } from "../types/global";
 
 export const artifactsMultipleSearchStrategy: SearchStrategy<Artifact> = {
-    name: 'td.s96, td.s91, td.s68, td.s77',
+    name: 'td.s96, td.s92, td.s68, td.s78',
     img: 'td>div>img',
-    twoPieces: 'td.s92, td.s69, td.s82, td.s78, td.s97',
-    fourPieces: 'td.s93, td.s70, td.s88, td.s84, td.s98',
+    twoPieces: 'td.s93, td.s70, td.s83, td.s79, td.s98',
+    fourPieces: 'td.s94, td.s71, td.s89, td.s85, td.s99',
 }
 
 export const weaponsMultipleSearchStrategy: SearchStrategy<Weapon> = {
-    name: 'td.s29, td.s57, td.s41, td.s46, td.s58, td.s33, td.s44, td.s45, td.s49, td.s34',
+    name: 'td.s30, td.s58, td.s42, td.s47, td.s59, td.s34, td.s45, td.s46, td.s50, td.s35',
     img: 'td>div>img',
-    mainStat: 'td.s42, td.s30, td.s50',
-    subStat: 'td.s42, td.s30, td.s50',
-    passiveEffect: 'td.s43, td.s31, td.s51'
+    mainStat: 'td.s43, td.s31, td.s51',
+    subStat: 'td.s43, td.s31, td.s51',
+    passiveEffect: 'td.s44, td.s32, td.s52'
 }

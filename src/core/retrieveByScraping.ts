@@ -89,7 +89,7 @@ export async function findWeapons(type: GenshinWeapons): Promise<APIResponse<Wea
 
     for (let i = 0; i <= CLASS_BUMPS; i++) {
         const artifacts = fetchClosure(bumpClassBy<Weapon>(weaponsMultipleSearchStrategy, i))
-        if (artifacts) {
+        if (artifacts && artifacts.data && artifacts.data.length > 0) {
             cache.set('artifacts', artifacts.data)
             return artifacts
         }
@@ -146,7 +146,7 @@ export async function findArtifacts(): Promise<APIResponse<Artifact>> {
 
     for (let i = 0; i <= CLASS_BUMPS; i++) {
         const artifacts = fetchClosure(bumpClassBy<Artifact>(artifactsMultipleSearchStrategy, i))
-        if (artifacts) {
+        if (artifacts && artifacts.data && artifacts.data.length > 0) {
             cache.set('artifacts', artifacts.data)
             return artifacts
         }

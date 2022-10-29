@@ -24,7 +24,7 @@ export function bumpClassBy<T>(strategy: SearchStrategy<T>, bumpAddend: number):
         if (Object.prototype.hasOwnProperty.call(strategy, key)) {
             if (key !== 'img') {
                 copy[key] = strategy[key]
-                    .replace('td.s', '')
+                    .replaceAll('td.s', '')
                     .split(',')
                     .map(val => String(Number(val) + bumpAddend))
                     .reduce((curr, next) => `${curr}, td.s${next}`, 'td.s')
