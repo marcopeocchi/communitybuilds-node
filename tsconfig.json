@@ -12,7 +12,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "allowJs": false
+    "allowJs": false,
   },
   "include": [
     "src/**/*"

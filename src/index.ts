@@ -1,54 +1,117 @@
-import { getBuildsByElement, setApiKey, setConfig } from "./core/retrieve";
-import { findArtifacts, findWeapons } from "./core/retrieveByScraping";
-import { APIResponse, Artifact, Config, GenshinCharacter, GenshinElement, Weapon } from "./types/global";
+import { getBuildsByElement, setApiKey, setConfig } from './core/retrieve'
+import { findArtifacts, findWeapons } from './core/retrieveByScraping'
+import {
+    Artifact,
+    Config,
+    GenshinCharacter,
+    GenshinElement,
+    GenshinWeapons,
+    Weapon
+} from './types'
+
+import { pipe } from 'fp-ts/function'
+import * as O from 'fp-ts/Option'
 
 export namespace CommunityBuilds {
-    export function init(key: string, config: Config = { eludeCaching: false, cacheTTL: 60 * 1000 }) {
+    /**
+     * Inits the package
+     * @param key Google spreadsheet API key
+     * @param config Caching config
+     */
+    export function init(
+        key: string,
+        config: Config = { eludeCaching: false, cacheTTLms: 60 * 1000 }
+    ) {
         setApiKey(key)
         setConfig(config)
     }
-    export async function pyro(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("pyro")
-    }
-    export async function hydro(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("hydro")
-    }
-    export async function anemo(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("anemo")
-    }
-    export async function electro(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("electro")
-    }
-    export async function dendro(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("dendro")
-    }
-    export async function cryo(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("cryo")
-    }
-    export async function geo(): Promise<APIResponse<GenshinCharacter>> {
-        return getBuildsByElement("geo")
-    }
-    export async function all(): Promise<APIResponse<GenshinCharacter>[]> {
-        const elements: GenshinElement[] = ["pyro", "hydro", "anemo", "electro", "dendro", "cryo", "geo"]
-        const response = elements.map((element) => getBuildsByElement(element))
-        return Promise.all(response)
-    }
-    export async function claymores(): Promise<APIResponse<Weapon>> {
-        return findWeapons("claymores");
-    }
-    export async function swords(): Promise<APIResponse<Weapon>> {
-        return findWeapons("swords");
-    }
-    export async function catalysts(): Promise<APIResponse<Weapon>> {
-        return findWeapons("catalysts");
-    }
-    export async function polearms(): Promise<APIResponse<Weapon>> {
-        return findWeapons("polearms");
-    }
-    export async function bows(): Promise<APIResponse<Weapon>> {
-        return findWeapons("bows");
-    }
-    export async function artifacts(): Promise<APIResponse<Artifact>> {
-        return findArtifacts();
-    }
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const pyro = async () => pipe(
+        await getBuildsByElement('pyro'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const hydro = async () => pipe(
+        await getBuildsByElement('hydro'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const anemo = async () => pipe(
+        await getBuildsByElement('anemo'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const electro = async () => pipe(
+        await getBuildsByElement('electro'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const dendro = async () => pipe(
+        await getBuildsByElement('dendro'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const cryo = async () => pipe(
+        await getBuildsByElement('cryo'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * @deprecated use getCharacterByElement
+     */
+    export const geo = async () => pipe(
+        await getBuildsByElement('geo'),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+
+    export const getCharactersByElement = async (element: GenshinElement) => pipe(
+        await getBuildsByElement(element),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<GenshinCharacter>())
+    )
+
+    /**
+     * Retrieves all weapons of a given type
+     * @param type Weapon type
+     */
+    export const getWeaponsByType = async (type: GenshinWeapons) => pipe(
+        await findWeapons(type),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<Weapon>())
+    )
+
+    /**
+     * Retrieves all artifacts sets
+     * @param type Weapon type
+     */
+    export const getArtifacts = async () => pipe(
+        await findArtifacts(),
+        O.map((e) => e.data),
+        O.getOrElse(() => new Array<Artifact>())
+    )
 }

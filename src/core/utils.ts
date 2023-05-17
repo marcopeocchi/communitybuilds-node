@@ -1,7 +1,7 @@
-import { SearchStrategy } from "../types/global";
+import { SearchStrategy } from "../types";
 
 export function Decouple(T: any): string {
-    return (T as unknown) as string
+  return (T as unknown) as string
 }
 
 /**
@@ -16,20 +16,20 @@ export function Decouple(T: any): string {
  * @returns 
  */
 export function bumpClassBy<T>(strategy: SearchStrategy<T>, bumpAddend: number): SearchStrategy<T> {
-    if (bumpAddend === 0) {
-        return strategy
+  if (bumpAddend === 0) {
+    return strategy
+  }
+  const copy = { ...strategy }
+  for (const key in strategy) {
+    if (Object.prototype.hasOwnProperty.call(strategy, key)) {
+      if (key !== 'img') {
+        copy[key] = strategy[key]
+          .replaceAll('td.s', '')
+          .split(',')
+          .map(val => String(Number(val) + bumpAddend))
+          .reduce((curr, next) => `${curr}, td.s${next}`, 'td.s')
+      }
     }
-    const copy = { ...strategy }
-    for (const key in strategy) {
-        if (Object.prototype.hasOwnProperty.call(strategy, key)) {
-            if (key !== 'img') {
-                copy[key] = strategy[key]
-                    .replaceAll('td.s', '')
-                    .split(',')
-                    .map(val => String(Number(val) + bumpAddend))
-                    .reduce((curr, next) => `${curr}, td.s${next}`, 'td.s')
-            }
-        }
-    }
-    return copy
+  }
+  return copy
 }

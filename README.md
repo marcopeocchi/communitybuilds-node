@@ -20,7 +20,7 @@ const { CommunityBuilds } = require("communitybuilds-node")
 CommunityBuilds.init("your-api-key")
 
 // promise based example
-CommunityBuilds.pyro()
+CommunityBuilds.getCharactersByElement('pyro')
     .then(res => {
         const [amber] = res.data.filter(character => character.name === "amber")
         console.log(inspect(amber, { depth: null }))
@@ -28,12 +28,12 @@ CommunityBuilds.pyro()
 
 // async context example
 async function cryoBuilds(){
-    const { data } = await CommunityBuilds.cryo()
+    const data = await CommunityBuilds.getCharactersByElement('cryo')
     console.log(data)
 }
 
 async function artifacts(){
-    const { data } = await CommunityBuilds.artifacts()
+    const data = await CommunityBuilds.getArtifacts()
     console.log(data)
 }
 ```
@@ -119,7 +119,7 @@ const { inspect } = require("util")
 const { CommunityBuilds } = require("communitybuilds-node")
 
 (async () => {
-  const { data } = await CommunityBuilds.bows()
+  const data = await CommunityBuilds.bows()
   console.log(inspect(data, { depth: null }))
 })()
 ```
@@ -153,6 +153,17 @@ In order to properly function this package needs a google-console api key that y
 ## Available methods
 
 ```javascript
+
+// NEW API
+CommunityBuilds.getCharactersByElement('pyro')
+CommunityBuilds.getCharactersByElement('...')
+
+CommunityBuilds.getWeaponsByType('bows')
+CommunityBuilds.getWeaponsByType('...')
+
+CommunityBuilds.getArtifacts()
+
+// OLD API
 CommunityBuilds.init()      // init API
 CommunityBuilds.pyro()      // fetch pyro builds
 CommunityBuilds.hydro()     // fetch hydro builds

@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
+    "fp-ts": "^2.15.0",
     "lru-cache": "^7.14.0"
   }
 }

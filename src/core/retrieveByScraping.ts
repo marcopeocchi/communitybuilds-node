@@ -1,156 +1,167 @@
-import * as cheerio from 'cheerio';
-import { googleDocsArtifacts, googleDocsArtifactsPath, httpHeaders } from './constants';
-import myHttp from './http';
-
-import LRUCache from 'lru-cache';
-import { APIResponse, Artifact, GenshinWeapons, SearchStrategy, Weapon } from '../types/global';
+import * as cheerio from 'cheerio'
 import {
-    artifactsMultipleSearchStrategy,
-    weaponsMultipleSearchStrategy,
-} from './strategies';
-import { bumpClassBy, Decouple } from './utils';
+  googleDocsArtifacts,
+  googleDocsArtifactsPath,
+  httpHeaders
+} from './constants'
+import myHttp from './http'
+
+import LRUCache from 'lru-cache'
+import {
+  APIResponse,
+  Artifact,
+  GenshinWeapons,
+  SearchStrategy,
+  Weapon
+} from '../types'
+import {
+  artifactsMultipleSearchStrategy,
+  weaponsMultipleSearchStrategy,
+} from './strategies'
+import { bumpClassBy, Decouple } from './utils'
+import * as O from 'fp-ts/Option'
 
 const CLASS_BUMPS = 100
 
 const cache = new LRUCache<string, Weapon[] | Artifact[]>({
-    max: 50,
-    ttl: 1000 * 60 * 60,
-    allowStale: false,
-    updateAgeOnGet: false,
-    updateAgeOnHas: false,
+  max: 50,
+  ttl: 1000 * 60 * 60,
+  allowStale: false,
+  updateAgeOnGet: false,
+  updateAgeOnHas: false,
 })
+
+const typeMapping: Record<GenshinWeapons, number> = {
+  claymores: 2,
+  swords: 3,
+  catalysts: 4,
+  polearms: 5,
+  bows: 6,
+}
 
 /**
  * Scrape google docs published page to fetch data of all weapons
  * @param type genshin weapon type/kind to fetch
  * @returns standard api response with weapons data
  */
-export async function findWeapons(type: GenshinWeapons): Promise<APIResponse<Weapon>> {
-    if (cache.peek(type)) {
-        return new Promise<APIResponse<Weapon>>((resolve) => resolve({
-            data: cache.get(type) as Weapon[]
-        }))
-    }
-
-    const res = await myHttp.html(googleDocsArtifacts, {
-        path: googleDocsArtifactsPath,
-        headers: httpHeaders,
+export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIResponse<Weapon>>> {
+  if (cache.peek(type)) {
+    return O.some({
+      data: cache.get(type)!
     })
+  }
 
-    const typeMapping: Record<GenshinWeapons, number> = {
-        claymores: 2,
-        swords: 3,
-        catalysts: 4,
-        polearms: 5,
-        bows: 6,
-    }
+  const res = await myHttp.html(googleDocsArtifacts, {
+    path: googleDocsArtifactsPath,
+    headers: httpHeaders,
+  })
 
-    const $ = cheerio.load(res)
+  const $ = cheerio.load(res)
 
-    const tbody = $('tbody')[typeMapping[type]]
-    const trs = $(tbody).find('tr')
+  const tbody = $('tbody')[typeMapping[type]]
+  const trs = $(tbody).find('tr')
 
-    const fetchClosure = (weaponsMultipleSearchStrategy: SearchStrategy<Weapon>) => {
-        const weapons: Array<Weapon> = Array.from(trs).map((tr, idx) => {
-            const name = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.name))).first().text()
-            // img sists on the next tr 🙄
-            const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
+  const fetchClosure = (weaponsMultipleSearchStrategy: SearchStrategy<Weapon>) => {
+    const weapons: Array<Weapon> = Array.from(trs).map((tr, idx) => {
+      const name = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.name))).first().text()
+      // img sists on the next tr 🙄
+      const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
 
-            const [mainStats, subStats] = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.mainStat)))
-            const passives = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.passiveEffect))).first().text()
+      const [mainStats, subStats] = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.mainStat)))
+      const passives = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.passiveEffect))).first().text()
 
-            if (name && mainStats && subStats && passives) {
-                const [baseATKlv1, baseATKlv90] = $(mainStats).text().replace('Base ATK:', '').split('/')
-                const [subStatType, numValues] = $(subStats).text().split(':')
-                const [subStatLv1, subStatLv90] = numValues.split('/')
-
-                return {
-                    name: name,
-                    img: img,
-                    mainStat: {
-                        baseATKlv1: Number(baseATKlv1.trim()),
-                        baseATKlv90: Number(baseATKlv90.trim())
-                    },
-                    subStat: {
-                        type: subStatType,
-                        valueLv1: Number(subStatLv1),
-                        valueLv90: Number(subStatLv90)
-                    },
-                    passiveEffect: passives
-                }
-            }
-            return undefined
-        }).filter(Boolean) as Weapon[]
+      if (name && mainStats && subStats && passives) {
+        const [baseATKlv1, baseATKlv90] = $(mainStats).text().replace('Base ATK:', '').split('/')
+        const [subStatType, numValues] = $(subStats).text().split(':')
+        const [subStatLv1, subStatLv90] = numValues.split('/')
 
         return {
-            data: weapons
+          name: name,
+          img: img,
+          mainStat: {
+            baseATKlv1: Number(baseATKlv1.trim()),
+            baseATKlv90: Number(baseATKlv90.trim())
+          },
+          subStat: {
+            type: subStatType,
+            valueLv1: Number(subStatLv1),
+            valueLv90: Number(subStatLv90)
+          },
+          passiveEffect: passives
         }
-    }
+      }
+      return undefined
+    }).filter(Boolean) as Weapon[]
 
-    for (let i = 0; i <= CLASS_BUMPS; i++) {
-        const artifacts = fetchClosure(bumpClassBy<Weapon>(weaponsMultipleSearchStrategy, i))
-        if (artifacts && artifacts.data && artifacts.data.length > 0) {
-            cache.set('artifacts', artifacts.data)
-            return artifacts
-        }
+    return {
+      data: weapons
     }
+  }
 
-    return { data: [] }
+  for (let i = 0; i <= CLASS_BUMPS; i++) {
+    const artifacts = fetchClosure(bumpClassBy<Weapon>(weaponsMultipleSearchStrategy, i))
+    if (artifacts && artifacts.data && artifacts.data.length > 0) {
+      cache.set('artifacts', artifacts.data)
+      return O.some(artifacts)
+    }
+  }
+
+  return O.none
 }
 
 /**
  * Scrape google docs published page to fetch data of all artifacts
  * @returns standard api response with artifacts data
  */
-export async function findArtifacts(): Promise<APIResponse<Artifact>> {
-    if (cache.peek('artifacts')) {
-        return new Promise<APIResponse<Artifact>>((resolve) => resolve({
-            data: cache.get('artifacts') as Artifact[]
-        }))
-    }
-
-    const res = await myHttp.html(googleDocsArtifacts, {
-        path: googleDocsArtifactsPath,
-        headers: httpHeaders,
+export async function findArtifacts(): Promise<O.Option<APIResponse<Artifact>>> {
+  if (cache.peek('artifacts')) {
+    return O.some({
+      data: cache.get('artifacts')!
     })
+  }
 
-    const $ = cheerio.load(res)
+  const res = await myHttp.html(googleDocsArtifacts, {
+    path: googleDocsArtifactsPath,
+    headers: httpHeaders,
+  })
 
-    const tbody = $('tbody')[7]
-    const trs = $(tbody).find('tr')
+  const $ = cheerio.load(res)
 
-    const fetchClosure = (artifactsMultipleSearchStrategy: SearchStrategy<Artifact>) => {
-        const artifacts: Array<Artifact> = Array.from(trs).map((tr, idx) => {
-            const name = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.name))).first().text()
-            // img sists on the next tr 🙄
-            const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
+  const tbody = $('tbody')[7]
+  const trs = $(tbody).find('tr')
 
-            const twoPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.twoPieces))).text()
-            const fourPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.fourPieces))).text()
+  const fetchClosure = (artifactsMultipleSearchStrategy: SearchStrategy<Artifact>) => {
+    const artifacts: Array<Artifact> = Array.from(trs).map((tr, idx) => {
+      const name = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.name))).first().text()
+      // img sists on the next tr 🙄
+      const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
 
-            if (name && twoPieces && fourPieces) {
-                return {
-                    name: name,
-                    img: img,
-                    twoPieces: twoPieces,
-                    fourPieces: fourPieces,
-                }
-            }
-            return undefined
-        }).filter(Boolean) as Artifact[]
+      const twoPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.twoPieces))).text()
+      const fourPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.fourPieces))).text()
 
+      if (name && twoPieces && fourPieces) {
         return {
-            data: artifacts
+          name: name,
+          img: img,
+          twoPieces: twoPieces,
+          fourPieces: fourPieces,
         }
-    }
+      }
+      return undefined
+    }).filter(Boolean) as Artifact[]
 
-    for (let i = 0; i <= CLASS_BUMPS; i++) {
-        const artifacts = fetchClosure(bumpClassBy<Artifact>(artifactsMultipleSearchStrategy, i))
-        if (artifacts && artifacts.data && artifacts.data.length > 0) {
-            cache.set('artifacts', artifacts.data)
-            return artifacts
-        }
+    return {
+      data: artifacts
     }
+  }
 
-    return { data: [] }
+  for (let i = 0; i <= CLASS_BUMPS; i++) {
+    const artifacts = fetchClosure(bumpClassBy<Artifact>(artifactsMultipleSearchStrategy, i))
+    if (artifacts && artifacts.data && artifacts.data.length > 0) {
+      cache.set('artifacts', artifacts.data)
+      return O.some(artifacts)
+    }
+  }
+
+  return O.none
 }

@@ -24,32 +24,24 @@ describe("scrape google docs page", () => {
         expect(tbodys).toHaveLength(9)
     })
     it("retrieve all 5 star claymores", async () => {
-        const { data } = await findWeapons('claymores')
+        const data = await CommunityBuilds.getWeaponsByType('claymores')
         expect(data.length).toBeGreaterThanOrEqual(5)
     })
     it("retrieve all 5 star bows", async () => {
-        const { data } = await findWeapons('bows')
+        const data = await CommunityBuilds.getWeaponsByType('bows')
         expect(data.length).toBeGreaterThanOrEqual(6)
     })
     it("retrieve all 5 star polearms", async () => {
-        const { data } = await findWeapons('polearms')
+        const data = await CommunityBuilds.getWeaponsByType('polearms')
         expect(data.length).toBeGreaterThanOrEqual(6)
     })
     it("retrieve all 5 star catalysts", async () => {
-        const { data } = await findWeapons('catalysts')
+        const data = await CommunityBuilds.getWeaponsByType('catalysts')
         expect(data.length).toBeGreaterThanOrEqual(5)
     })
     it("retrieve all 5 star swords", async () => {
-        const { data } = await findWeapons('swords')
+        const data = await CommunityBuilds.getWeaponsByType('swords')
         expect(data.length).toBeGreaterThanOrEqual(7)
-    })
-    it("retrieve all 5 star catalysts from utility", async () => {
-        const { data } = await CommunityBuilds.catalysts()
-        expect(data.length).toBeGreaterThanOrEqual(5)
-    })
-    it("retrieve artifacts from utility", async () => {
-        const { data } = await CommunityBuilds.artifacts()
-        expect(data.length).toBeGreaterThanOrEqual(5)
     })
 })
 
