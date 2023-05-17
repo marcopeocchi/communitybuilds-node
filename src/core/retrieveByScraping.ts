@@ -18,7 +18,7 @@ import {
   artifactsMultipleSearchStrategy,
   weaponsMultipleSearchStrategy,
 } from './strategies'
-import { bumpClassBy, Decouple } from './utils'
+import { bumpClassBy, decouple } from './utils'
 import * as O from 'fp-ts/Option'
 
 const CLASS_BUMPS = 100
@@ -63,12 +63,12 @@ export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIRes
 
   const fetchClosure = (weaponsMultipleSearchStrategy: SearchStrategy<Weapon>) => {
     const weapons: Array<Weapon> = Array.from(trs).map((tr, idx) => {
-      const name = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.name))).first().text()
+      const name = $(tr).find(decouple($(weaponsMultipleSearchStrategy.name))).first().text()
       // img sists on the next tr 🙄
       const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
 
-      const [mainStats, subStats] = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.mainStat)))
-      const passives = $(tr).find(Decouple($(weaponsMultipleSearchStrategy.passiveEffect))).first().text()
+      const [mainStats, subStats] = $(tr).find(decouple($(weaponsMultipleSearchStrategy.mainStat)))
+      const passives = $(tr).find(decouple($(weaponsMultipleSearchStrategy.passiveEffect))).first().text()
 
       if (name && mainStats && subStats && passives) {
         const [baseATKlv1, baseATKlv90] = $(mainStats).text().replace('Base ATK:', '').split('/')
@@ -132,12 +132,12 @@ export async function findArtifacts(): Promise<O.Option<APIResponse<Artifact>>> 
 
   const fetchClosure = (artifactsMultipleSearchStrategy: SearchStrategy<Artifact>) => {
     const artifacts: Array<Artifact> = Array.from(trs).map((tr, idx) => {
-      const name = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.name))).first().text()
+      const name = $(tr).find(decouple($(artifactsMultipleSearchStrategy.name))).first().text()
       // img sists on the next tr 🙄
       const img = (idx + 1) < trs.length ? $(trs[idx + 1]).find('img').attr('src') : ''
 
-      const twoPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.twoPieces))).text()
-      const fourPieces = $(tr).find(Decouple($(artifactsMultipleSearchStrategy.fourPieces))).text()
+      const twoPieces = $(tr).find(decouple($(artifactsMultipleSearchStrategy.twoPieces))).text()
+      const fourPieces = $(tr).find(decouple($(artifactsMultipleSearchStrategy.fourPieces))).text()
 
       if (name && twoPieces && fourPieces) {
         return {

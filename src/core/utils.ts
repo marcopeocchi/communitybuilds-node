@@ -1,6 +1,6 @@
 import { SearchStrategy } from "../types";
 
-export function Decouple(T: any): string {
+export function decouple(T: any): string {
   return (T as unknown) as string
 }
 
