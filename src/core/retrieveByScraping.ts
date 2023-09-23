@@ -3,22 +3,22 @@ import {
   googleDocsArtifacts,
   googleDocsArtifactsPath,
   httpHeaders
-} from './constants'
-import myHttp from './http'
+} from './constants.js'
+import myHttp from './http.js'
 
-import LRUCache from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 import {
   APIResponse,
   Artifact,
   GenshinWeapons,
   SearchStrategy,
   Weapon
-} from '../types'
+} from '../types/index.js'
 import {
   artifactsMultipleSearchStrategy,
   weaponsMultipleSearchStrategy,
-} from './strategies'
-import { bumpClassBy, decouple } from './utils'
+} from './strategies.js'
+import { bumpClassBy, decouple } from './utils.js'
 import * as O from 'fp-ts/Option'
 
 const CLASS_BUMPS = 100
@@ -48,7 +48,7 @@ const typeMapping: Record<GenshinWeapons, number> = {
 export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIResponse<Weapon>>> {
   if (cache.peek(type)) {
     return O.some({
-      data: cache.get(type)!
+      data: cache.get(type)! as Weapon[]
     })
   }
 
@@ -100,7 +100,7 @@ export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIRes
   }
 
   for (let i = 0; i <= CLASS_BUMPS; i++) {
-    const artifacts = fetchClosure(bumpClassBy<Weapon>(weaponsMultipleSearchStrategy, i))
+    const artifacts = fetchClosure(bumpClassBy<Weapon>(weaponsMultipleSearchStrategy, 2))
     if (artifacts && artifacts.data && artifacts.data.length > 0) {
       cache.set('artifacts', artifacts.data)
       return O.some(artifacts)
@@ -117,7 +117,7 @@ export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIRes
 export async function findArtifacts(): Promise<O.Option<APIResponse<Artifact>>> {
   if (cache.peek('artifacts')) {
     return O.some({
-      data: cache.get('artifacts')!
+      data: cache.get('artifacts') as Artifact[]
     })
   }
 

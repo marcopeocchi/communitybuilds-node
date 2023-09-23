@@ -1,4 +1,4 @@
-import { Artifact, SearchStrategy, Weapon } from "../types";
+import { Artifact, SearchStrategy, Weapon } from '../types/index.js'
 
 export const artifactsMultipleSearchStrategy: SearchStrategy<Artifact> = {
     name: 'td.s96, td.s92, td.s68, td.s78',

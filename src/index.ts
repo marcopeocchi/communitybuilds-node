@@ -1,5 +1,5 @@
-import { getBuildsByElementTask, setApiKey, setConfig } from './core/retrieve'
-import { findArtifacts, findWeapons } from './core/retrieveByScraping'
+import { getBuildsByElementTask, setApiKey, setConfig } from './core/retrieve.js'
+import { findArtifacts, findWeapons } from './core/retrieveByScraping.js'
 import {
     APIResponse,
     Artifact,
@@ -9,7 +9,7 @@ import {
     GenshinElement,
     GenshinWeapons,
     Weapon
-} from './types'
+} from './types/index.js'
 
 import { pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
@@ -29,9 +29,6 @@ export namespace CommunityBuilds {
         setConfig(config)
     }
 
-    /**
-     * @deprecated use getCharacterByElement
-     */
     export const pyro = () => pipe(
         'pyro',
         getBuildsByElementTask,

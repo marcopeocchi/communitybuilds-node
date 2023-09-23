@@ -4,15 +4,15 @@ import {
   GenshinCharacter,
   GenshinCharacterBuild,
   GenshinElement
-} from '../types'
+} from '../types/index.js'
 import {
   googleSheetsApidomain,
   httpHeaders,
   spreadsheetPath
-} from './constants'
+} from './constants.js'
 
-import LRUCache from 'lru-cache'
-import myHttp from './http'
+import { LRUCache } from 'lru-cache'
+import myHttp from './http.js'
 
 import * as TE from 'fp-ts/TaskEither'
 

@@ -1,4 +1,4 @@
-import { SearchStrategy } from "../types";
+import { SearchStrategy } from '../types/index.js'
 
 export function decouple(T: any): string {
   return (T as unknown) as string
