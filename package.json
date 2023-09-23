@@ -2,8 +2,8 @@
   "name": "communitybuilds-node",
   "version": "2.0.15",
   "description": "Node.js API for Genshin Impact communitiy builds spreadsheet",
-  "main": "./index.js",
-  "typings": "./index.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.json",
