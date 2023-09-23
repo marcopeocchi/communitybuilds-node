@@ -6,15 +6,15 @@ import {
   GenshinElement
 } from '../types'
 import {
-  httpHeaders,
   googleSheetsApidomain,
+  httpHeaders,
   spreadsheetPath
 } from './constants'
 
-import myHttp from './http'
 import LRUCache from 'lru-cache'
+import myHttp from './http'
 
-import * as O from 'fp-ts/Option'
+import * as TE from 'fp-ts/TaskEither'
 
 let key: string
 let params: string
@@ -64,11 +64,13 @@ export const setConfig = (aconfig: Config) => {
  * @param element Genshin Impact element
  * @returns Standard api response
  */
-export async function getBuildsByElement(element: GenshinElement): Promise<O.Option<APIResponse<GenshinCharacter>>> {
-  if (!key) O.none
+async function getBuildsByElement(element: GenshinElement): Promise<APIResponse<GenshinCharacter>> {
+  if (!key) {
+    throw `no api key provided`
+  }
 
   if (!config.eludeCaching && cache.peek(element)) {
-    return O.some(cache.get(element)!)
+    return cache.get(element)!
   }
 
   // retrieve the spreadsheet as a JSON provided by Google
@@ -190,11 +192,16 @@ export async function getBuildsByElement(element: GenshinElement): Promise<O.Opt
     if (!config.eludeCaching) {
       cache.set(element, { data: response })
     }
-    return O.some({ data: response })
+    return { data: response }
   } else {
     if (!config.eludeCaching) {
       cache.clear()
     }
-    return O.none
+    throw `${element} has zero builds`
   }
 }
+
+export const getBuildsByElementTask = TE.tryCatchK(
+  getBuildsByElement,
+  (e) => `failed to fetch builds for element, error: ${e}`
+)

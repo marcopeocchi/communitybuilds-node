@@ -56,3 +56,8 @@ export type Config = {
   eludeCaching: boolean
   cacheTTLms: number
 }
+
+export type ElementResponse = {
+  data: GenshinCharacter[]
+  error?: string
+}

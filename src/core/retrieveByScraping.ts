@@ -43,6 +43,7 @@ const typeMapping: Record<GenshinWeapons, number> = {
  * Scrape google docs published page to fetch data of all weapons
  * @param type genshin weapon type/kind to fetch
  * @returns standard api response with weapons data
+ * @deprecated
  */
 export async function findWeapons(type: GenshinWeapons): Promise<O.Option<APIResponse<Weapon>>> {
   if (cache.peek(type)) {

@@ -1,8 +1,10 @@
-import { getBuildsByElement, setApiKey, setConfig } from './core/retrieve'
+import { getBuildsByElementTask, setApiKey, setConfig } from './core/retrieve'
 import { findArtifacts, findWeapons } from './core/retrieveByScraping'
 import {
+    APIResponse,
     Artifact,
     Config,
+    ElementResponse,
     GenshinCharacter,
     GenshinElement,
     GenshinWeapons,
@@ -11,6 +13,7 @@ import {
 
 import { pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
+import * as TE from 'fp-ts/TaskEither'
 
 export namespace CommunityBuilds {
     /**
@@ -29,74 +32,82 @@ export namespace CommunityBuilds {
     /**
      * @deprecated use getCharacterByElement
      */
-    export const pyro = async () => pipe(
-        await getBuildsByElement('pyro'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
+    export const pyro = () => pipe(
+        'pyro',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
+
+    export const hydro = () => pipe(
+        'hydro',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
+
+    export const anemo = () => pipe(
+        'anemo',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
+
+    export const electro = () => pipe(
+        'electro',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
     )
 
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const hydro = async () => pipe(
-        await getBuildsByElement('hydro'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const anemo = async () => pipe(
-        await getBuildsByElement('anemo'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
+    export const dendro = () => pipe(
+        'dendro',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
 
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const electro = async () => pipe(
-        await getBuildsByElement('electro'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
+    export const cryo = () => pipe(
+        'cryo',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
 
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const dendro = async () => pipe(
-        await getBuildsByElement('dendro'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
-
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const cryo = async () => pipe(
-        await getBuildsByElement('cryo'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
-
-    /**
-     * @deprecated use getCharacterByElement
-     */
-    export const geo = async () => pipe(
-        await getBuildsByElement('geo'),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
+    export const geo = () => pipe(
+        'geo',
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
 
 
     export const getCharactersByElement = async (element: GenshinElement) => pipe(
-        await getBuildsByElement(element),
-        O.map((e) => e.data),
-        O.getOrElse(() => new Array<GenshinCharacter>())
-    )
+        element,
+        getBuildsByElementTask,
+        TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
+            (l) => ({ data: [], error: l }),
+            (r) => ({ data: r.data })
+        )
+    )()
 
     /**
      * Retrieves all weapons of a given type
+     * @deprecated Will be removed next release
      * @param type Weapon type
      */
     export const getWeaponsByType = async (type: GenshinWeapons) => pipe(
@@ -107,6 +118,7 @@ export namespace CommunityBuilds {
 
     /**
      * Retrieves all artifacts sets
+     * @deprecated Will be removed next release
      * @param type Weapon type
      */
     export const getArtifacts = async () => pipe(

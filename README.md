@@ -26,14 +26,9 @@ CommunityBuilds.getCharactersByElement('pyro')
         console.log(inspect(amber, { depth: null }))
     })
 
-// async context example
+// async await example
 async function cryoBuilds(){
-    const data = await CommunityBuilds.getCharactersByElement('cryo')
-    console.log(data)
-}
-
-async function artifacts(){
-    const data = await CommunityBuilds.getArtifacts()
+    const {data} = await CommunityBuilds.getCharactersByElement('cryo')
     console.log(data)
 }
 ```
@@ -113,39 +108,6 @@ First example will output
 }
 ```
 
-Bows retrieval example
-```js
-const { inspect } = require("util")
-const { CommunityBuilds } = require("communitybuilds-node")
-
-(async () => {
-  const data = await CommunityBuilds.bows()
-  console.log(inspect(data, { depth: null }))
-})()
-```
-
-Will output
-```js
-[
-  {
-    name: 'Skyward Harp',
-    img: 'https://lh5.googleusercontent.com/IP6wRp9LrejOdFhiouHF8KLAQkrlvWjlHpYdAHkpeHhxfRLUjg89Zh4jiXxG_Gmp62QSKyuvhvObAaqrYuhk6fBHUXLxo7gqVRBdh6BFNXHWy9yzfIsxBXa-uEoS19vDce5i-yuMLgi3XTeZ30ex3j_qscZRcMtSffQaWFLm_5oTvnKLeA8=w217-h99',
-    mainStat: { baseATKlv1: 48, baseATKlv90: 674 },
-    subStat: { type: 'Crit Rate %', valueLv1: 4.8, valueLv90: 22.1 },
-    passiveEffect: 'Increases CRIT DMG by 20/25/30/35/40%. Hits have a 60/70/80/90/100% chance to inflict a small AoE attack, dealing 125% Physical ATK DMG. Can only occur once every 4/3.5/3/2.5/2s.'
-  },
-  // ... SKIP SOME ENTRIES OTHERWISE IT WILL PRETTY LONG  ... //
-  {
-    name: 'Fading Twilight',
-    img: 'https://lh3.googleusercontent.com/gsDoY6DWoUo4rPud_TydYoUTmqMU67-o5ks7cnL7CEFYNu25S2R9VT7IRl-j_Tw4-ZLQHxnmKR3L73UHhrO39_ZZ_EQjuDKn6WskAbUJjn799MbHIDnNi-vz05lGiqu6uDryhw0easpAyO8P-u-5uwKCn9nIxnugWvjPz6yQqWSsLIxC-eY=w217-h129',
-    mainStat: { baseATKlv1: 44, baseATKlv90: 565 },
-    subStat: { type: 'ER %', valueLv1: 6.7, valueLv90: 30.6 },
-    passiveEffect: 'Has three states, Evengleam, Afterglow, and Dawnblaze, which increase DMG dealt by (6/10/14)/(7.5/12.5/17.5)/(9/15/21)/(10.5/17.5/24.5)(12/20/28)% respectively. When attacks hit opponents, this weapon will switch to the next state. This weapon can change states once every 7s. The character equipping this weapon can still trigger the state switch while not on the field.'
-  }
-]
-
-```
-
 ## API keys
 
 In order to properly function this package needs a google-console api key that you can obtain freely from [here](https://console.cloud.google.com/apis/credentials) and then enable the Google Sheet API. Create a new project then request a new API key. Beware of the 300 req/min limit. An LRU cache has been added to avoir reaching prematurely the limit.
@@ -174,13 +136,13 @@ CommunityBuilds.cryo()      // fetch cryo builds
 CommunityBuilds.geo()       // fetch geo builds
 CommunityBuilds.all()       // return iterable of all elements
 
-CommunityBuilds.claymores()
-CommunityBuilds.swords()
-CommunityBuilds.catalysts()
-CommunityBuilds.polearms()
-CommunityBuilds.bows()
+// CommunityBuilds.claymores()   Deprecated
+// CommunityBuilds.swords()      Deprecated
+// CommunityBuilds.catalysts()   Deprecated
+// CommunityBuilds.polearms()    Deprecated
+// CommunityBuilds.bows()        Deprecated
 
-CommunityBuilds.artifacts() 
+// CommunityBuilds.artifacts()   Deprecated
 ```
 
 ## Notes
