@@ -59,5 +59,6 @@ export type Config = {
 
 export type ElementResponse = {
   data: GenshinCharacter[]
+  element?: GenshinElement
   error?: string
 }

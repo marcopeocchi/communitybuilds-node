@@ -34,7 +34,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'pyro' })
         )
     )()
 
@@ -43,7 +43,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'hydro' })
         )
     )()
 
@@ -52,7 +52,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'anemo' })
         )
     )()
 
@@ -61,7 +61,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'electro' })
         )
     )
 
@@ -70,7 +70,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'dendro' })
         )
     )()
 
@@ -79,7 +79,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'cryo' })
         )
     )()
 
@@ -88,7 +88,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element: 'geo' })
         )
     )()
 
@@ -98,7 +98,7 @@ export namespace CommunityBuilds {
         getBuildsByElementTask,
         TE.match<string, ElementResponse, APIResponse<GenshinCharacter>>(
             (l) => ({ data: [], error: l }),
-            (r) => ({ data: r.data })
+            (r) => ({ data: r.data, element })
         )
     )()
 
